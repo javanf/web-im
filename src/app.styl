@@ -7,19 +7,39 @@ button
   border none
 input
   border 1px solid #eee
+html, body, #app
+  width 100%
+  height 100%
 .nickname
   line-height 30px
   width 100%
   border 1px solid $green
-
+.dis-flex
+  display flex
+  height 100%
 .web-im
   width 100%
   height 100%
-  .header
+  .user-list
+    width 200px
+    height 100%
     box-shadow 1px 1px 1px #eee
-    line-height 40px
-    padding-left 20px
-    font-size 24px
+    .user
+      line-height 40px
+      padding 0 4px
+      border-bottom 1px solid #ccc
+  .msg-content
+    position relative
+    width 100%
+    .header
+      position sticky
+      box-shadow 1px -1px 2px 2px #eee
+      line-height 40px
+      padding-left 20px
+      font-size 24px
+      top 0
+      z-index 10
+      background #fff
   .im-record
     .join-tips
       position relative!important
@@ -48,13 +68,13 @@ input
         text-overflow ellipsis
         overflow hidden
         text-align center
-      p
+      .message-box
         position absolute
         top 50%
         transform translateY(-50%)
         left 60px
       &.user
-        p
+        .message-box
           background #46b0ff
           float right
           right 60px
@@ -70,7 +90,7 @@ input
       display inline-block
       padding 0 20px
   .footer
-    position fixed
+    position absolute
     display flex
     bottom 0
     width 100%

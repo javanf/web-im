@@ -10,21 +10,29 @@
     </c-dialog>
 
     <div class="web-im">
-      <div class="header im-title">聊天室</div>
-      <div class="content im-record">
-        <div class="li" :class="{user: item.uid == uid}" v-for="item in messageList">
-          <template v-if="item.type===1">
-            <p class="join-tips">{{item.msg}}</p>
-          </template>
-          <template v-else>
-            <div class="img">{{item.nickname}}</div>
-            <p class="message-box">{{item.msg}}</p>
-          </template>
+      <div class="dis-flex">
+        <div class="user-list">
+          <div class="user" @click="triggerGroup">群1</div>
+          <div class="user" @click="triggerPersonal(item)" v-if="item.uid!=uid" v-for="item in users">{{item.nickname}}</div>
         </div>
-      </div>
-      <div class="footer im-input">
-        <input type="text" v-model="msg" placeholder="请输入内容">
-        <button @click="send">发送</button>
+        <div class="msg-content">
+          <div class="header im-title">{{title}}</div>
+            <div class="content im-record">
+              <div class="li" :class="{user: item.uid == uid}" v-for="item in currentMessage">
+                <template v-if="item.type===1">
+                  <p class="join-tips">{{item.msg}}</p>
+                </template>
+                <template v-else>
+                  <div class="img">{{item.nickname}}</div>
+                  <p class="message-box">{{item.msg}}</p>
+                </template>
+              </div>
+            </div>
+            <div class="footer im-input">
+              <input type="text" v-model="msg" placeholder="请输入内容">
+              <button @click="send">发送</button>
+            </div>
+        </div>
       </div>
     </div>
   </div>
@@ -41,11 +49,14 @@ export default {
   },
   data(){
     return {
+      title: '群聊',
       uid: '',
       nickname: '',
       socket: '',
       msg: '',
-      messageList: []
+      messageList: [],
+      users: [],
+      bridge: []
     }
   },
   mounted() {
@@ -68,7 +79,27 @@ export default {
         }
     }
   },
+  computed: {
+    currentMessage() {
+      let vm = this;
+      let data = vm.messageList.filter(item=>{
+        return item.bridge.sort().join(',') == vm.bridge.sort().join(',')
+      })
+      return data;
+    }
+  },
   methods: {
+    triggerGroup() {
+      this.bridge = [];
+      this.title = '群聊';
+    },
+    triggerPersonal(item) {
+      if(this.uid === item.uid){
+        return;
+      }
+      this.bridge = [this.uid, item.uid];
+      this.title = '和' + item.nickname + '聊天';
+    },
     send(){
       if(!this.msg){
         return
@@ -80,7 +111,8 @@ export default {
         uid: this.uid,
         type: type,
         nickname: this.nickname,
-        msg: msg
+        msg: msg,
+        bridge: this.bridge
       }));
       this.msg = '';
     },
@@ -93,13 +125,13 @@ export default {
         socket.onopen = function(e){
           console.log("连接服务器成功");
           if(!vm.uid){
-            vm.sendMessage(1)
             vm.uid = 'web_im_' + moment().valueOf();
             localStorage.setItem('WEB_IM_USER', JSON.stringify({
               uid: vm.uid,
               nickname: vm.nickname
             }))
           }
+          vm.sendMessage(1)
         }
         socket.onclose = function(e){
           console.log("服务器关闭");
@@ -111,6 +143,9 @@ export default {
         socket.onmessage = function(e){
           let message = JSON.parse(e.data);
           vm.messageList.push(message);
+          if(message.users) {
+            vm.users = message.users;
+          }
         }   
       }
     },
