@@ -1,0 +1,87 @@
+$green = #00b7a3;
+*
+  padding 0
+  margin 0
+  outline none
+button
+  border none
+input
+  border 1px solid #eee
+.nickname
+  line-height 30px
+  width 100%
+  border 1px solid $green
+
+.web-im
+  width 100%
+  height 100%
+  .header
+    box-shadow 1px 1px 1px #eee
+    line-height 40px
+    padding-left 20px
+    font-size 24px
+  .im-record
+    .join-tips
+      position relative!important
+      display block
+      color #cccccc
+      font-size 15px
+      text-align center
+      width 100%
+      left 0!important
+      transform none!important
+    .li
+      margin-bottom 10px
+      position relative
+      &:after
+        content ''
+        display block
+        clear both
+      .img
+        float left
+        width 50px
+        height 50px
+        border-radius 100%
+        background #ccc
+        padding 4px
+        line-height 50px
+        text-overflow ellipsis
+        overflow hidden
+        text-align center
+      p
+        position absolute
+        top 50%
+        transform translateY(-50%)
+        left 60px
+      &.user
+        p
+          background #46b0ff
+          float right
+          right 60px
+          left inherit
+        .img
+          float right
+    .message-box
+      background $green
+      color #ffffff
+      line-height 30px
+      border-radius 6px
+      font-size 18px
+      display inline-block
+      padding 0 20px
+  .footer
+    position fixed
+    display flex
+    bottom 0
+    width 100%
+    box-shadow 1px 1px 8px #eee
+    height 60px
+    input
+      flex 1
+      padding 0 20px
+      font-size 24px
+    button
+      width 200px
+      background $green
+      color #fff
+      font-size 24px
