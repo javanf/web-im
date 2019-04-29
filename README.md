@@ -9,7 +9,7 @@ npm install
 # 运行客户端
 npm run dev
 
-# 运行客户端server/index.js
+# 运行服务端server/index.js
 node index.js
 ```
 
