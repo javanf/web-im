@@ -12,8 +12,13 @@
     <div class="web-im">
       <div class="dis-flex">
         <div class="user-list">
-          <div class="user" @click="triggerGroup">群1</div>
-          <div class="user" @click="triggerPersonal(item)" v-if="item.uid!=uid" v-for="item in users">{{item.nickname}}</div>
+          <div class="user" @click="triggerGroup">群1
+            <span class="tips-num">{{getMsgNum()}}</span>
+          </div>
+          <div class="user" @click="triggerPersonal(item)" v-if="item.uid!=uid" v-for="item in users">
+            {{item.nickname}}
+            <span class="tips-num">{{getMsgNum(item)}}</span>
+          </div>
         </div>
         <div class="msg-content">
           <div class="header im-title">{{title}}</div>
@@ -85,10 +90,24 @@ export default {
       let data = vm.messageList.filter(item=>{
         return item.bridge.sort().join(',') == vm.bridge.sort().join(',')
       })
+      data.map(item=>{
+        item.status = 0
+        return item;
+      })
       return data;
     }
   },
   methods: {
+    getMsgNum(user){
+      if(!user){
+        return this.messageList.filter(item=>{
+          return !item.bridge.length && item.status === 1
+        }).length
+      }
+      return this.messageList.filter(item=>{
+        return item.bridge.length && item.uid === user.uid && item.status === 1
+      }).length
+    },
     triggerGroup() {
       this.bridge = [];
       this.title = '群聊';
