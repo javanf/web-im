@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43 (38999) - http://www.bohemiancoding.com/sketch -->
+    <title>selected_btnnews</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="退票和改签-copy" transform="translate(-156.000000, -350.000000)" fill-rule="nonzero" fill="#10AF7E">
+            <g id="selected_btn-copy" transform="translate(156.000000, 350.000000)">
+                <g id="对号-2">
+                    <path d="M10,20 C4.47722656,20 0,15.5227734 0,10 C0,4.47722656 4.47722656,0 10,0 C15.5227734,0 20,4.47722656 20,10 C20,15.5227734 15.5227734,20 10,20 Z M15.8355469,6.93111328 C15.4705469,6.56833984 14.8789063,6.56833984 14.5138867,6.93111328 L9.22666016,12.1911133 L6.58277344,9.56220703 C6.21777344,9.19888672 5.62611328,9.19888672 5.26109375,9.56220703 C4.89611328,9.925 4.89611328,10.5133398 5.26109375,10.8766602 L8.56554688,14.162793 C8.93054688,14.5261133 9.52222656,14.5261133 9.88777344,14.162793 L15.8355469,8.24552734 C16.2005469,7.88275391 16.2005469,7.29386719 15.8355469,6.93107422 L15.8355469,6.93111328 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

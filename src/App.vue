@@ -9,16 +9,29 @@
       <input class="nickname" v-model="nickname" type="text" placeholder="请输入你的昵称">
     </c-dialog>
 
+    <c-dialog
+      ref="createGroupDialog"
+      title='请输入群名称'
+      confirmBtn="确认"
+      @confirm="createGroup"
+    >
+      <input class="nickname" v-model="groupName" type="text" placeholder="请输入群名称">
+    </c-dialog>
+
     <div class="web-im">
       <div class="dis-flex">
         <div class="user-list">
-          <div class="user" @click="triggerGroup">群1
-            <span class="tips-num">{{getMsgNum()}}</span>
+          <div class="user create-group-btn" @click="$refs.createGroupDialog.show()">新建群</div>
+          <div class="user" @click="triggerGroup(item)" v-for="item in groups">
+            {{item.name}}
+            <span class="tips-num">{{getGroupMsgNum(item)}}</span>
+            <span v-if="!checkUserIsGroup(item)" @click.stop="addGroup(item)" class="add-group">+</span>
           </div>
           <div class="user" @click="triggerPersonal(item)" v-if="item.uid!=uid" v-for="item in users">
             {{item.nickname}}
-            <span class="tips-num">{{getMsgNum(item)}}</span>
+            <span class="tips-num">{{getUserMsgNum(item)}}</span>
           </div>
+          
         </div>
         <div class="msg-content">
           <div class="header im-title">{{title}}</div>
@@ -47,6 +60,7 @@
 import Vue from 'vue'
 import moment from 'moment'
 
+
 export default {
   name: 'App',
   components: {
@@ -54,13 +68,15 @@ export default {
   },
   data(){
     return {
-      title: '群聊',
+      title: '请选择群或者人员进行聊天',
       uid: '',
       nickname: '',
       socket: '',
       msg: '',
       messageList: [],
       users: [],
+      groups: [],
+      groupId: '',
       bridge: []
     }
   },
@@ -83,12 +99,17 @@ export default {
             vm.send()
         }
     }
+    
   },
   computed: {
     currentMessage() {
       let vm = this;
       let data = vm.messageList.filter(item=>{
-        return item.bridge.sort().join(',') == vm.bridge.sort().join(',')
+        if(this.groupId) {
+          return item.groupId === this.groupId
+        } else if(item.bridge.length){
+          return item.bridge.sort().join(',') == vm.bridge.sort().join(',')
+        }
       })
       data.map(item=>{
         item.status = 0
@@ -98,30 +119,68 @@ export default {
     }
   },
   methods: {
-    getMsgNum(user){
-      if(!user){
-        return this.messageList.filter(item=>{
-          return !item.bridge.length && item.status === 1
-        }).length
-      }
+    addGroup(item){
+      this.socket.send(JSON.stringify({
+        uid: this.uid,
+        type: 20,
+        nickname: this.nickname,
+        groupId: item.id,
+        groupName: item.name,
+        bridge: []
+      }));
+      this.$message({type: 'success', message: `成功加入${item.name}群`})
+    },
+    checkUserIsGroup (item) {
+      return item.users.some(item=>{
+        return item.uid === this.uid
+      })
+    },
+    createGroup(){
+      this.socket.send(JSON.stringify({
+        uid: this.uid,
+        type: 10,
+        nickname: this.nickname,
+        groupName: this.groupName,
+        bridge: []
+      }));
+    },
+    getGroupMsgNum(group){
+      return this.messageList.filter(item=>{
+        return item.groupId === group.id && item.status === 1
+      }).length
+    },
+    getUserMsgNum(user){
       return this.messageList.filter(item=>{
         return item.bridge.length && item.uid === user.uid && item.status === 1
       }).length
     },
-    triggerGroup() {
+    triggerGroup(item) {
+      let issome = item.users.some(item=>{
+        return item.uid === this.uid
+      })
+      if(!issome){
+        this.$message({type: 'error', message: `您还不是${item.name}群成员`})
+        return
+      }
       this.bridge = [];
-      this.title = '群聊';
+      this.groupId = item.id;
+      this.title = `和${item.name}群成员聊天`;
     },
     triggerPersonal(item) {
       if(this.uid === item.uid){
         return;
       }
+      this.groupId = '';
       this.bridge = [this.uid, item.uid];
-      this.title = '和' + item.nickname + '聊天';
+      this.title = `和${item.nickname}聊天`;
     },
     send(){
       if(!this.msg){
         return
+      }
+      if(!this.bridge.length && !this.groupId){
+        this.$message({type: 'error', message: '请选择发送人或者群'})
+        return;
       }
       this.sendMessage(2, this.msg)
     },
@@ -131,7 +190,8 @@ export default {
         type: type,
         nickname: this.nickname,
         msg: msg,
-        bridge: this.bridge
+        bridge: this.bridge,
+        groupId: this.groupId
       }));
       this.msg = '';
     },
@@ -143,6 +203,7 @@ export default {
 
         socket.onopen = function(e){
           console.log("连接服务器成功");
+          vm.$message({type: 'success', message: '连接服务器成功'})
           if(!vm.uid){
             vm.uid = 'web_im_' + moment().valueOf();
             localStorage.setItem('WEB_IM_USER', JSON.stringify({
@@ -164,6 +225,9 @@ export default {
           vm.messageList.push(message);
           if(message.users) {
             vm.users = message.users;
+          }
+          if (message.groups){
+            vm.groups = message.groups;
           }
         }   
       }
