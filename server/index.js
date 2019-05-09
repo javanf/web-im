@@ -42,8 +42,16 @@ var server = ws.createServer(function(conn){
         if(!isuser){
           users.push({
             nickname: obj.nickname,
-            uid: obj.uid
+            uid: obj.uid,
+            status: 1
           });
+        } else {
+          users.map((item, index)=>{
+            if(item.uid === obj.uid){
+              item.status = 1;
+            }
+            return item;
+          })
         }
         boardcast({
           type: 1,
@@ -54,6 +62,26 @@ var server = ws.createServer(function(conn){
           uid: obj.uid,
           nickname: obj.nickname,
           bridge: obj.bridge
+        });
+        break;
+      // 注销
+      case 2:
+        delete conns[''+obj.uid+''];
+        users.map((item, index)=>{
+          if(item.uid === obj.uid){
+            item.status = 0;
+          }
+          return item;
+        })
+        boardcast({
+          type: 1,
+          date: moment().format('YYYY-MM-DD HH:mm:ss'),
+          msg: obj.nickname+'退出了聊天室',
+          users: users,
+          groups: groups,
+          uid: obj.uid,
+          nickname: obj.nickname,
+          bridge: []
         });
         break;
       // 创建群

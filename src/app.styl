@@ -14,22 +14,82 @@ html, body, #app
   line-height 30px
   width 100%
   border 1px solid $green
+
+@-webkit-keyframes fColorAni{
+  0%   {
+    color: $green;
+  }
+  50%  {
+    color: #46b0ff;
+  }
+  100%  {
+    color: #333;
+  }
+}
+
 .dis-flex
   display flex
-  height 100%
 .web-im
   width 100%
   height 100%
-  .user-list
+  .content
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    box-sizing: border-box;
+    min-width: 0;
+    flex-direction: column;
+    .header
+      box-shadow 1px -1px 2px 2px #eee
+      line-height 40px
+      height 40px
+      font-size 24px
+      z-index 10
+      background #fff
+    .body
+      flex 1
+      overflow-y auto
+      box-shadow 1px 1px 1px #eee
+    .footer
+      box-shadow 1px 1px 8px #eee
+      height 60px
+  .left
     width 220px
-    height 100%
-    box-shadow 1px 1px 1px #eee
-    .create-group-btn
-      cursor pointer
+    .aside
+      height 100%
+    .tabbar
+      label
+        flex 1
+        text-align center
+        line-height 40px
+        cursor pointer
+        font-size 16px
+        &.active
+          color $green
+        &:last-child
+          border-left 1px solid #eee
+        &.unread
+          animation fColorAni .3s infinite
+    .user-list
+      top 0
+    .func
+      label
+        flex 1
+        text-align center
+        line-height 60px
+        cursor pointer
+        &:last-child
+          border-left 1px solid #eee
     .user
       line-height 40px
-      padding 0 4px
-      border-bottom 1px solid #ccc
+      padding 0 8px
+      border-bottom 1px solid #eee
+      &.offline
+        color #ccc
+      &.online
+        color #333
+      &.ani
+        animation fColorAni .3s 5
       .tips-num
         height 18px
         font-size 12px
@@ -50,84 +110,55 @@ html, body, #app
         color $green
         border 1px solid $green
         cursor pointer
-  .msg-content
-    position relative
-    width 100%
-    .header
-      position sticky
-      box-shadow 1px -1px 2px 2px #eee
-      line-height 40px
+  .right
+    flex 1
+    .im-title
       padding-left 20px
-      font-size 24px
-      top 0
-      z-index 10
-      background #fff
-  .im-record
-    padding 20px
-    .join-tips
-      position relative!important
-      display block
-      color #cccccc
-      font-size 15px
-      text-align center
-      width 100%
-      left 0!important
-      transform none!important
-    .li
-      margin-bottom 10px
-      position relative
-      &:after
-        content ''
+    .body
+      padding 10px 20px
+    .im-record
+      .join-tips
+        position relative!important
         display block
-        clear both
-      .img
-        float left
-        width 50px
-        height 50px
-        border-radius 100%
-        background #ccc
-        padding 4px
-        line-height 50px
-        text-overflow ellipsis
-        overflow hidden
+        color #cccccc
+        font-size 15px
         text-align center
+        width 100%
+        left 0!important
+        transform none!important
+      .li
+        margin-bottom 15px
+        position relative
+        text-align left
+        color #46b0ff
+        &:after
+          content ''
+          display block
+          clear both
+        .message-date
+          font-size 16px
+          color #b9b8b8
+          .m-nickname
+            color #46b0ff
+        &.user
+          text-align right
+          color $green
+          .message-date
+            .m-nickname
+              color $green
       .message-box
-        position absolute
-        top 50%
-        transform translateY(-50%)
-        left 60px
-      &.user
-        .message-box
-          background #46b0ff
-          float right
-          right 60px
-          left inherit
-        .img
-          float right
-    .message-box
-      background $green
-      color #ffffff
-      line-height 30px
-      border-radius 6px
-      font-size 18px
-      display inline-block
-      padding 0 20px
-  .footer
-    position absolute
-    display flex
-    bottom 0
-    width 100%
-    box-shadow 1px 1px 8px #eee
-    height 60px
-    input
-      flex 1
-      padding 0 20px
-      font-size 24px
-    button
-      width 200px
-      background $green
-      color #fff
-      font-size 24px
+        line-height 30px
+        font-size 20px
+    .footer
+      input
+        flex 1
+        padding 0 20px
+        font-size 24px
+      button
+        width 200px
+        background $green
+        color #fff
+        font-size 24px
 
 //警告框
 div.my-el-message
@@ -185,3 +216,16 @@ div.my-el-message
       transform scale(0) translateX(-100%)
     to
       transform scale(1) translateX(-50%)
+
+
+::-webkit-scrollbar-thumb
+  background-color: #ccc;
+  height: 50px;
+  outline-offset: -2px;
+  outline: 2px solid #fff;
+  -webkit-border-radius: 4px;
+  border: 2px solid #fff;
+
+::-webkit-scrollbar
+  width: 8px;
+  height: 8px;
