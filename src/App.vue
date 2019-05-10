@@ -191,6 +191,11 @@ export default {
       })
     },
     createGroup(){
+      this.groupName = this.groupName.trim();
+      if(!this.groupName){
+        this.$message({type: 'error', message: '请输入群名称'})
+        return;
+      }
       this.socket.send(JSON.stringify({
         uid: this.uid,
         type: 10,
@@ -220,6 +225,7 @@ export default {
       this.title = `和${item.nickname}聊天`;
     },
     send(){
+      this.msg = this.msg.trim();
       if(!this.msg){
         return
       }
@@ -283,6 +289,11 @@ export default {
       }
     },
     login(){
+      this.nickname = this.this.nickname.trim();
+      if(!this.nickname){
+        this.$message({type: 'error', message: '请输入您的昵称'})
+        return;
+      }
       this.$refs.loginDialog.hide()
       this.conWebSocket();
     }

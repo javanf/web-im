@@ -66,7 +66,7 @@ var server = ws.createServer(function(conn){
         break;
       // 注销
       case 2:
-        delete conns[''+obj.uid+''];
+        // delete conns[''+obj.uid+''];
         users.map((item, index)=>{
           if(item.uid === obj.uid){
             item.status = 0;
