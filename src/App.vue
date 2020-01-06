@@ -289,7 +289,7 @@ export default {
       }
     },
     login(){
-      this.nickname = this.this.nickname.trim();
+      this.nickname = this.nickname.trim();
       if(!this.nickname){
         this.$message({type: 'error', message: '请输入您的昵称'})
         return;
